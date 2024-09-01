@@ -20,28 +20,28 @@ export default async function Home() {
   const coffees = await getData();
   console.log(coffees);
   return (
-    <main className="flex  flex-col items-center  p-8 bg-purple-900 text-purple-100">
-      <h1 className="text-4xl font-bold mb-8 text-purple-200">
+    <main className="flex min-h-screen flex-col items-center  p-8 bg-amber-50 text-stone-800">
+      <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">
         Cozy Coffee Spots
       </h1>
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
         {coffees.coffees.map((coffee) => (
           <li
             key={coffee.id}
-            className="bg-purple-800 rounded-lg shadow-lg p-6 hover:bg-purple-700 transition-colors duration-300"
+            className="bg-amber-100 rounded-lg shadow-md p-6 hover:bg-amber-200 transition-colors duration-300 border border-amber-200"
           >
-            <h2 className="text-2xl font-semibold mb-2 text-purple-100">
+            <h2 className="text-2xl font-serif font-semibold mb-2 text-stone-900">
               {coffee.shop_name}
             </h2>
-            <p className="mb-1">
+            <p className="mb-1 text-stone-700">
               <span className="font-medium">Coffee Rating:</span>{" "}
               {coffee.coffee_rating} ☕
             </p>
-            <p className="mb-1">
+            <p className="mb-1 text-stone-700">
               <span className="font-medium">Dessert Rating:</span>{" "}
               {coffee.dessert_rating} 🍰
             </p>
-            <p className="text-purple-300">
+            <p className="text-stone-600">
               <span className="font-medium">Location:</span> {coffee.location}
             </p>
           </li>
