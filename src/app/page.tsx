@@ -1,5 +1,6 @@
 import { turso } from "./lib/turso";
 import { Coffee } from "./models/Coffee";
+import { UploadImage } from "./components/UploadImage";
 
 async function getData() {
   try {
@@ -24,12 +25,18 @@ export default async function Home() {
       <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">
         Cozy Coffee Spots
       </h1>
+      <UploadImage />
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
         {coffees.coffees.map((coffee) => (
           <li
             key={coffee.id}
             className="bg-amber-100 rounded-lg shadow-md p-6 hover:bg-amber-200 transition-colors duration-300 border border-amber-200"
           >
+            <img
+              src={coffee.picture_url}
+              alt="Coffee Shop"
+              className="w-full h-48 object-cover rounded-lg mb-4"
+            />
             <h2 className="text-2xl font-serif font-semibold mb-2 text-stone-900">
               {coffee.shop_name}
             </h2>
