@@ -77,8 +77,8 @@ export function CafeCard(props: Coffee) {
             <DialogHeader>
               <DialogTitle>Edit Cafe Information</DialogTitle>
               <DialogDescription>
-                Make changes to the cafe information here. Click save when
-                you're done.
+                Make changes to the cafe information here. Click save when you
+                are done.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
