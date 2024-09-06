@@ -1,6 +1,7 @@
 import { UploadReview } from "@/components/upload-review";
 import { turso } from "./lib/turso";
 import { Coffee } from "./models/Coffee";
+import { Card } from "@/components/ui/card";
 
 async function getData() {
   try {
@@ -21,17 +22,14 @@ export default async function Home() {
   const coffees = await getData();
   console.log(coffees);
   return (
-    <main className="flex min-h-screen flex-col items-center  p-8 bg-amber-50 text-stone-800">
+    <main className="flex min-h-screen flex-col items-center p-4 bg-amber-50 text-stone-800">
       <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">
         Coffee Spots ☕
       </h1>
       <UploadReview />
       <ul className="grid grid-cols-1 mt-5 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
         {coffees.coffees.map((coffee) => (
-          <li
-            key={coffee.id}
-            className="bg-amber-100 rounded-lg shadow-md p-6 hover:bg-amber-200 transition-colors duration-300 border border-amber-200"
-          >
+          <Card key={coffee.id} className="p-4 shadow-md">
             <img
               src={coffee.picture_url}
               alt="Coffee Shop"
@@ -51,7 +49,7 @@ export default async function Home() {
             <p className="text-stone-600">
               <span className="font-medium">Location:</span> {coffee.location}
             </p>
-          </li>
+          </Card>
         ))}
       </ul>
     </main>
