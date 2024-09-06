@@ -5,9 +5,23 @@ import { Card } from "@/components/ui/card";
 
 async function getData() {
   try {
-    const { rows } = await tursoClient.execute("SELECT * FROM coffees");
+    const { rows } = await tursoClient.execute(
+      "SELECT * FROM coffees ORDER BY id DESC"
+    );
+    const coffees = rows as unknown as Coffee[];
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    for (const coffee of coffees) {
+      coffee.created_at = new Date(coffee.created_at).toLocaleDateString(
+        "es-ES",
+        options
+      );
+    }
     return {
-      coffees: rows as unknown as Coffee[],
+      coffees,
     };
   } catch (error) {
     console.error(error);
@@ -36,6 +50,7 @@ export default async function Home() {
             <h2 className="text-2xl font-serif font-semibold mb-2 text-stone-900">
               {coffee.shop_name}
             </h2>
+            <p className="mb-1 text-stone-500">{coffee.created_at}</p>
             <p className="mb-1 text-stone-700">
               <span className="font-medium">Coffee Rating:</span>{" "}
               {coffee.coffee_rating} ☕

@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { CoffeeIcon, CakeIcon, UploadIcon, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function CoffeeSpotForm() {
+  const router = useRouter();
   const [coffeeName, setCoffeeName] = useState("");
   const [coffeeRating, setCoffeeRating] = useState(0);
   const [dessertRating, setDessertRating] = useState(0);
@@ -86,6 +88,7 @@ export function CoffeeSpotForm() {
       if (response.ok) {
         console.log("Success");
         resetForm();
+        router.refresh();
       } else {
         console.error("Error");
       }
