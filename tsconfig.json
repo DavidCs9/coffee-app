@@ -26,7 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/lib/turso.ts"
+    "src/app/lib/tursoClient.ts"
   ],
   "exclude": ["node_modules"]
 }

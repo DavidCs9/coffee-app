@@ -2,32 +2,11 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Coffee, CakeSlice, MapPin, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { CoffeeSpotForm } from "./coffee-spot-form";
 
 export function UploadReview() {
-  const [isUploading, setIsUploading] = useState(false);
   const [showForm, setShowForm] = useState(false);
-
-  const handleUpload = (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsUploading(true);
-    // Simulating upload process
-    setTimeout(() => {
-      setIsUploading(false);
-      setShowForm(false);
-      // Here you would typically handle the actual upload logic
-    }, 2000);
-  };
 
   return (
     <>

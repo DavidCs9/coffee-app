@@ -1,12 +1,11 @@
 import { UploadReview } from "@/components/upload-review";
-import { turso } from "./lib/turso";
+import { tursoClient } from "./lib/tursoClient";
 import { Coffee } from "./models/Coffee";
 import { Card } from "@/components/ui/card";
 
 async function getData() {
   try {
-    const { rows } = await turso.execute("SELECT * FROM coffees");
-    console.log(rows);
+    const { rows } = await tursoClient.execute("SELECT * FROM coffees");
     return {
       coffees: rows as unknown as Coffee[],
     };
@@ -20,7 +19,6 @@ async function getData() {
 
 export default async function Home() {
   const coffees = await getData();
-  console.log(coffees);
   return (
     <main className="flex min-h-screen flex-col items-center p-4 bg-amber-50 text-stone-800">
       <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">

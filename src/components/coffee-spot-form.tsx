@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { CoffeeIcon, CakeIcon, UploadIcon } from "lucide-react";
+import { CoffeeIcon, CakeIcon, UploadIcon, Loader2 } from "lucide-react";
 
 export function CoffeeSpotForm() {
   const [coffeeName, setCoffeeName] = useState("");
@@ -15,6 +15,7 @@ export function CoffeeSpotForm() {
   const [location, setLocation] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -22,16 +23,77 @@ export function CoffeeSpotForm() {
       setImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
+        const base64String = reader.result as string;
+        setImagePreview(base64String);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const resetForm = () => {
+    setCoffeeName("");
+    setCoffeeRating(0);
+    setDessertRating(0);
+    setLocation("");
+    setImage(null);
+    setImagePreview(null);
+    setIsLoading(false);
+  };
+
+  const uploadImageToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const response = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send this data to your backend or state management
-    console.log({ coffeeName, coffeeRating, dessertRating, location, image });
+    setIsLoading(true);
+
+    try {
+      let imageUrl = "";
+      if (image) {
+        imageUrl = await uploadImageToCloudinary(image);
+        console.log("Image URL:", imageUrl);
+      }
+
+      const formData = new FormData();
+      formData.append("shop_name", coffeeName);
+      formData.append("coffee_rating", coffeeRating.toString());
+      formData.append("dessert_rating", dessertRating.toString());
+      formData.append("location", location);
+      formData.append("picture_url", imageUrl);
+
+      const response = await fetch("/api/add-review", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("Success");
+        resetForm();
+      } else {
+        console.error("Error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -113,8 +175,15 @@ export function CoffeeSpotForm() {
               required
             />
           </div>
-          <Button type="submit" className="w-full">
-            Submit Review
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              "Submit Review"
+            )}
           </Button>
         </form>
       </CardContent>
