@@ -2,6 +2,7 @@ import { UploadReview } from "@/components/upload-review";
 import { tursoClient } from "./lib/tursoClient";
 import { Coffee } from "./models/Coffee";
 import { Card } from "@/components/ui/card";
+import { CafeCard } from "@/components/cafe-card";
 
 async function getData() {
   try {
@@ -41,28 +42,9 @@ export default async function Home() {
       <UploadReview />
       <ul className="grid grid-cols-1 mt-5 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
         {coffees.coffees.map((coffee) => (
-          <Card key={coffee.id} className="p-4 shadow-md">
-            <img
-              src={coffee.picture_url}
-              alt="Coffee Shop"
-              className="w-full h-48 object-cover rounded-lg mb-4"
-            />
-            <h2 className="text-2xl font-serif font-semibold mb-2 text-stone-900">
-              {coffee.shop_name}
-            </h2>
-            <p className="mb-1 text-stone-500">{coffee.created_at}</p>
-            <p className="mb-1 text-stone-700">
-              <span className="font-medium">Coffee Rating:</span>{" "}
-              {coffee.coffee_rating} ☕
-            </p>
-            <p className="mb-1 text-stone-700">
-              <span className="font-medium">Dessert Rating:</span>{" "}
-              {coffee.dessert_rating} 🍰
-            </p>
-            <p className="text-stone-600">
-              <span className="font-medium">Location:</span> {coffee.location}
-            </p>
-          </Card>
+          <li key={coffee.id}>
+            <CafeCard {...coffee} />
+          </li>
         ))}
       </ul>
     </main>
