@@ -3,7 +3,7 @@ import { tursoClient } from "./lib/tursoClient";
 import { Coffee } from "./models/Coffee";
 import { CafeCard } from "@/components/cafe-card";
 
-export const revalidate = 86400; // Set ISR directly in the component
+export const revalidate = 600; // Set ISR directly in the component
 
 async function getData(): Promise<Coffee[]> {
   try {
