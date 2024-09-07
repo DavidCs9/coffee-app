@@ -54,6 +54,8 @@ export function CafeCard(props: Coffee) {
           src={cafeData.picture_url!}
           alt={cafeData.shop_name}
           className="w-full h-[200px] object-cover rounded-md mb-4"
+          width={350}
+          height={200}
         />
         <p className="text-sm text-gray-500 mb-2">{cafeData.created_at}</p>
         <div className="flex items-center mb-2">
