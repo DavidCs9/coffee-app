@@ -38,10 +38,22 @@ export function CafeCard(props: Coffee) {
     setIsOpen(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     // Here you would typically send a delete request to your backend
-    console.log("Deleting:", cafeData);
-    setIsOpen(false);
+    try {
+      console.log("Deleting:", cafeData);
+      const res = await fetch(`/api/review?id=${cafeData.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        throw new Error("Failed to delete cafe entry");
+      }
+      console.log("Cafe entry deleted successfully");
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error deleting cafe entry:", error);
+      return;
+    }
   };
 
   return (
@@ -148,7 +160,7 @@ export function CafeCard(props: Coffee) {
                 />
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2">
               <Button variant="destructive" onClick={handleDelete}>
                 Delete
               </Button>

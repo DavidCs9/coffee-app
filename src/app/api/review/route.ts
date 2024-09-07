@@ -78,3 +78,35 @@ export async function POST(req: NextRequest) {
     { status: 200 }
   );
 }
+
+export async function DELETE(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json(
+      { message: "Missing id parameter" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    await tursoClient.execute({
+      sql: "DELETE FROM coffees WHERE id = ?",
+      args: [id],
+    });
+
+    revalidatePath("/");
+
+    return NextResponse.json(
+      { message: "Coffee entry deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting coffee entry:", error);
+    return NextResponse.json(
+      { message: "Error deleting coffee entry" },
+      { status: 500 }
+    );
+  }
+}
