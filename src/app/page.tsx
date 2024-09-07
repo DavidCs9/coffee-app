@@ -3,9 +3,9 @@ import { tursoClient } from "./lib/tursoClient";
 import { Coffee } from "./models/Coffee";
 import { CafeCard } from "@/components/cafe-card";
 
-export const revalidate = 86400;
+export const revalidate = 86400; // Set ISR directly in the component
 
-async function getData() {
+async function getData(): Promise<Coffee[]> {
   try {
     const { rows } = await tursoClient.execute(
       "SELECT * FROM coffees ORDER BY id DESC"
@@ -29,15 +29,8 @@ async function getData() {
   }
 }
 
-export async function getStaticProps() {
+export default async function Home() {
   const coffees = await getData();
-  return {
-    props: { coffees },
-    revalidate: 86400, // Revalidate the page every 24 hours
-  };
-}
-
-export default function Home({ coffees }: { coffees: Coffee[] }) {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 bg-amber-50 text-stone-800">
       <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">
