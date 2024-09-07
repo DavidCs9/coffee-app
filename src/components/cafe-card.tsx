@@ -18,6 +18,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CoffeeIcon, CakeIcon, MapPinIcon } from "lucide-react";
@@ -26,6 +38,8 @@ import Image from "next/image";
 
 export function CafeCard(props: Coffee) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [cafeData, setCafeData] = useState(props);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +49,7 @@ export function CafeCard(props: Coffee) {
   const handleSave = () => {
     // Here you would typically send the updated data to your backend
     console.log("Saving:", cafeData);
+    setIsSaveDialogOpen(false);
     setIsOpen(false);
   };
 
@@ -49,10 +64,11 @@ export function CafeCard(props: Coffee) {
         throw new Error("Failed to delete cafe entry");
       }
       console.log("Cafe entry deleted successfully");
+      setIsDeleteDialogOpen(false);
       setIsOpen(false);
     } catch (error) {
       console.error("Error deleting cafe entry:", error);
-      return;
+      setIsDeleteDialogOpen(false);
     }
   };
 
@@ -161,10 +177,53 @@ export function CafeCard(props: Coffee) {
               </div>
             </div>
             <DialogFooter className="gap-2">
-              <Button variant="destructive" onClick={handleDelete}>
-                Delete
-              </Button>
-              <Button onClick={handleSave}>Save changes</Button>
+              <AlertDialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}
+              >
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Delete</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the cafe entry.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete}>
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <AlertDialog
+                open={isSaveDialogOpen}
+                onOpenChange={setIsSaveDialogOpen}
+              >
+                <AlertDialogTrigger asChild>
+                  <Button>Save changes</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirm Changes</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to save these changes?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleSave}>
+                      Save
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DialogFooter>
           </DialogContent>
         </Dialog>
