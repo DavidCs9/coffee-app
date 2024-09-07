@@ -1,8 +1,9 @@
 import { UploadReview } from "@/components/upload-review";
 import { tursoClient } from "./lib/tursoClient";
 import { Coffee } from "./models/Coffee";
-import { Card } from "@/components/ui/card";
 import { CafeCard } from "@/components/cafe-card";
+
+export const revalidate = 86400;
 
 async function getData() {
   try {
@@ -21,19 +22,22 @@ async function getData() {
         options
       );
     }
-    return {
-      coffees,
-    };
+    return coffees;
   } catch (error) {
     console.error(error);
-    return {
-      coffees: [],
-    };
+    return [];
   }
 }
 
-export default async function Home() {
+export async function getStaticProps() {
   const coffees = await getData();
+  return {
+    props: { coffees },
+    revalidate: 86400, // Revalidate the page every 24 hours
+  };
+}
+
+export default function Home({ coffees }: { coffees: Coffee[] }) {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 bg-amber-50 text-stone-800">
       <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">
@@ -41,7 +45,7 @@ export default async function Home() {
       </h1>
       <UploadReview />
       <ul className="grid grid-cols-1 mt-5 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-        {coffees.coffees.map((coffee) => (
+        {coffees.map((coffee) => (
           <li key={coffee.id}>
             <CafeCard {...coffee} />
           </li>
