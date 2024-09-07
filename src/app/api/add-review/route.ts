@@ -1,5 +1,8 @@
+"use server";
+
 import { NextResponse, NextRequest } from "next/server";
 import { tursoClient } from "../../lib/tursoClient";
+import { revalidatePath } from "next/cache";
 
 interface newCoffee {
   shop_name: string; // Name of the coffee shop
@@ -69,6 +72,8 @@ export async function POST(req: NextRequest) {
       newCoffee.location,
     ],
   });
+
+  revalidatePath("/");
 
   return NextResponse.json(
     { message: "Coffee entry added successfully" },
