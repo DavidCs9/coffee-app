@@ -35,12 +35,14 @@ import { Label } from "@/components/ui/label";
 import { CoffeeIcon, CakeIcon, MapPinIcon } from "lucide-react";
 import { Coffee } from "@/app/models/Coffee";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 
 export function CafeCard(props: Coffee) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [cafeData, setCafeData] = useState(props);
+  const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCafeData({ ...cafeData, [e.target.name]: e.target.value });
@@ -65,10 +67,20 @@ export function CafeCard(props: Coffee) {
         throw new Error("Failed to update cafe entry");
       }
       console.log("Cafe entry updated successfully");
+      toast({
+        title: "Cafe entry updated",
+        description: "Your changes have been saved successfully",
+        variant: "default",
+      });
       setIsSaveDialogOpen(false);
       setIsOpen(false);
     } catch (error) {
       console.error("Error updating cafe entry:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update cafe entry",
+        variant: "destructive",
+      });
     }
   };
 
@@ -83,10 +95,20 @@ export function CafeCard(props: Coffee) {
         throw new Error("Failed to delete cafe entry");
       }
       console.log("Cafe entry deleted successfully");
+      toast({
+        title: "Cafe entry deleted",
+        description: "The cafe entry has been deleted successfully",
+        variant: "default",
+      });
       setIsDeleteDialogOpen(false);
       setIsOpen(false);
     } catch (error) {
       console.error("Error deleting cafe entry:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete cafe entry",
+        variant: "destructive",
+      });
       setIsDeleteDialogOpen(false);
     }
   };

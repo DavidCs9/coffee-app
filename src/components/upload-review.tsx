@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export function UploadReview() {
   const [open, setOpen] = useState(false);
@@ -25,7 +26,7 @@ export function UploadReview() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
+  const { toast } = useToast();
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -94,14 +95,29 @@ export function UploadReview() {
 
       if (response.ok) {
         console.log("Success");
+        toast({
+          title: "Success",
+          description: "Review uploaded successfully!",
+          variant: "default",
+        });
         resetForm();
         setOpen(false);
         router.refresh();
       } else {
         console.error("Error");
+        toast({
+          title: "Error",
+          description: "Failed to upload review",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload review",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
