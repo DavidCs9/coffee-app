@@ -87,7 +87,7 @@ export function UploadReview() {
       formData.append("location", location);
       formData.append("picture_url", imageUrl);
 
-      const response = await fetch("/api/add-review", {
+      const response = await fetch("/api/review", {
         method: "POST",
         body: formData,
       });
