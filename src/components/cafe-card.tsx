@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CoffeeIcon, CakeIcon, MapPinIcon } from "lucide-react";
 import { Coffee } from "@/app/models/Coffee";
+import Image from "next/image";
 
 export function CafeCard(props: Coffee) {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,8 +50,8 @@ export function CafeCard(props: Coffee) {
         <CardTitle>{cafeData.shop_name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <img
-          src={cafeData.picture_url}
+        <Image
+          src={cafeData.picture_url!}
           alt={cafeData.shop_name}
           className="w-full h-[200px] object-cover rounded-md mb-4"
         />

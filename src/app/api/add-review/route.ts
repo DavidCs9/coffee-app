@@ -60,8 +60,6 @@ export async function POST(req: NextRequest) {
     location: locationName,
   };
 
-  console.log(newCoffee.shop_name);
-
   await tursoClient.execute({
     sql: "INSERT INTO coffees (shop_name, coffee_rating, dessert_rating, picture_url, location) VALUES (?, ?, ?, ?, ?)",
     args: [
