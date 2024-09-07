@@ -110,3 +110,65 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+
+export async function PUT(req: NextRequest) {
+  const formData = await req.formData();
+  const { id, shop_name, coffee_rating, dessert_rating, location } =
+    Object.fromEntries(formData);
+
+  if (!id) {
+    return NextResponse.json(
+      { message: "Missing id parameter" },
+      { status: 400 }
+    );
+  }
+
+  const fieldsToUpdate = [];
+  const args = [];
+
+  if (shop_name) {
+    fieldsToUpdate.push("shop_name = ?");
+    args.push(shop_name.toString());
+  }
+  if (coffee_rating) {
+    fieldsToUpdate.push("coffee_rating = ?");
+    args.push(parseInt(coffee_rating.toString()));
+  }
+  if (dessert_rating) {
+    fieldsToUpdate.push("dessert_rating = ?");
+    args.push(parseInt(dessert_rating.toString()));
+  }
+  if (location) {
+    fieldsToUpdate.push("location = ?");
+    args.push(location.toString());
+  }
+
+  if (fieldsToUpdate.length === 0) {
+    return NextResponse.json(
+      { message: "No fields to update" },
+      { status: 400 }
+    );
+  }
+
+  args.push(id.toString());
+
+  try {
+    await tursoClient.execute({
+      sql: `UPDATE coffees SET ${fieldsToUpdate.join(", ")} WHERE id = ?`,
+      args,
+    });
+
+    revalidatePath("/");
+
+    return NextResponse.json(
+      { message: "Coffee entry updated successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error updating coffee entry:", error);
+    return NextResponse.json(
+      { message: "Error updating coffee entry" },
+      { status: 500 }
+    );
+  }
+}

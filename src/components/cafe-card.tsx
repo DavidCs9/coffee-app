@@ -46,11 +46,30 @@ export function CafeCard(props: Coffee) {
     setCafeData({ ...cafeData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Here you would typically send the updated data to your backend
-    console.log("Saving:", cafeData);
-    setIsSaveDialogOpen(false);
-    setIsOpen(false);
+    try {
+      const formData = new FormData();
+      formData.append("id", cafeData.id.toString());
+      formData.append("shop_name", cafeData.shop_name);
+      formData.append("created_at", cafeData.created_at);
+      formData.append("coffee_rating", cafeData.coffee_rating.toString());
+      formData.append("dessert_rating", cafeData.dessert_rating.toString());
+      formData.append("location", cafeData.location!);
+
+      const res = await fetch(`/api/review?id=${cafeData.id}`, {
+        method: "PUT",
+        body: formData,
+      });
+      if (!res.ok) {
+        throw new Error("Failed to update cafe entry");
+      }
+      console.log("Cafe entry updated successfully");
+      setIsSaveDialogOpen(false);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error updating cafe entry:", error);
+    }
   };
 
   const handleDelete = async () => {
@@ -119,7 +138,7 @@ export function CafeCard(props: Coffee) {
                 </Label>
                 <Input
                   id="name"
-                  name="name"
+                  name="shop_name"
                   value={cafeData.shop_name}
                   onChange={handleInputChange}
                   className="col-span-3"
@@ -131,7 +150,7 @@ export function CafeCard(props: Coffee) {
                 </Label>
                 <Input
                   id="date"
-                  name="date"
+                  name="created_at"
                   value={cafeData.created_at}
                   onChange={handleInputChange}
                   className="col-span-3"
@@ -143,7 +162,7 @@ export function CafeCard(props: Coffee) {
                 </Label>
                 <Input
                   id="coffeeRating"
-                  name="coffeeRating"
+                  name="coffee_rating"
                   type="number"
                   value={cafeData.coffee_rating}
                   onChange={handleInputChange}
@@ -156,7 +175,7 @@ export function CafeCard(props: Coffee) {
                 </Label>
                 <Input
                   id="dessertRating"
-                  name="dessertRating"
+                  name="dessert_rating"
                   type="number"
                   value={cafeData.dessert_rating}
                   onChange={handleInputChange}
