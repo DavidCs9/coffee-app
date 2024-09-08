@@ -1,36 +1,21 @@
+"use client";
+
 import { UploadReview } from "@/components/upload-review";
-import { tursoClient } from "./lib/tursoClient";
 import { Coffee } from "./models/Coffee";
 import { CafeCard } from "@/components/cafe-card";
+import { useEffect, useState } from "react";
 
-export const revalidate = 600; // Set ISR directly in the component
-
-async function getData(): Promise<Coffee[]> {
-  try {
-    const { rows } = await tursoClient.execute(
-      "SELECT * FROM coffees ORDER BY id DESC"
-    );
-    const coffees = rows as unknown as Coffee[];
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    for (const coffee of coffees) {
-      coffee.created_at = new Date(coffee.created_at).toLocaleDateString(
-        "es-ES",
-        options
-      );
-    }
-    return coffees;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+async function getCoffees(): Promise<Coffee[]> {
+  const response = await fetch("/api/review");
+  return response.json();
 }
 
-export default async function Home() {
-  const coffees = await getData();
+export default function Home() {
+  const [coffees, setCoffees] = useState<Coffee[]>([]);
+  useEffect(() => {
+    getCoffees().then(setCoffees);
+    console.log("coffees", coffees);
+  }, []);
   return (
     <main className="flex min-h-screen flex-col items-center p-4 bg-amber-50 text-stone-800">
       <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">

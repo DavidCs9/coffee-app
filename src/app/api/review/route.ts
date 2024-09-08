@@ -2,7 +2,6 @@
 
 import { NextResponse, NextRequest } from "next/server";
 import { tursoClient } from "../../lib/tursoClient";
-import { revalidatePath } from "next/cache";
 
 interface newCoffee {
   shop_name: string; // Name of the coffee shop
@@ -71,8 +70,6 @@ export async function POST(req: NextRequest) {
     ],
   });
 
-  revalidatePath("/");
-
   return NextResponse.json(
     { message: "Coffee entry added successfully" },
     { status: 200 }
@@ -95,8 +92,6 @@ export async function DELETE(req: NextRequest) {
       sql: "DELETE FROM coffees WHERE id = ?",
       args: [id],
     });
-
-    revalidatePath("/");
 
     return NextResponse.json(
       { message: "Coffee entry deleted successfully" },
@@ -158,8 +153,6 @@ export async function PUT(req: NextRequest) {
       args,
     });
 
-    revalidatePath("/");
-
     return NextResponse.json(
       { message: "Coffee entry updated successfully" },
       { status: 200 }
@@ -168,6 +161,22 @@ export async function PUT(req: NextRequest) {
     console.error("Error updating coffee entry:", error);
     return NextResponse.json(
       { message: "Error updating coffee entry" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  try {
+    const result = await tursoClient.execute(
+      "SELECT * FROM coffees ORDER BY id DESC"
+    );
+
+    return NextResponse.json(result.rows, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching coffee entries:", error);
+    return NextResponse.json(
+      { message: "Error fetching coffee entries" },
       { status: 500 }
     );
   }
