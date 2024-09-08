@@ -36,8 +36,10 @@ import { CoffeeIcon, CakeIcon, MapPinIcon } from "lucide-react";
 import { Coffee } from "@/app/models/Coffee";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 export function CafeCard(props: Coffee) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
@@ -72,6 +74,7 @@ export function CafeCard(props: Coffee) {
         description: "Your changes have been saved successfully",
         variant: "default",
       });
+      router.refresh();
       setIsSaveDialogOpen(false);
       setIsOpen(false);
     } catch (error) {
@@ -100,6 +103,7 @@ export function CafeCard(props: Coffee) {
         description: "The cafe entry has been deleted successfully",
         variant: "default",
       });
+      router.refresh();
       setIsDeleteDialogOpen(false);
       setIsOpen(false);
     } catch (error) {
