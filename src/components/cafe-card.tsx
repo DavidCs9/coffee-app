@@ -121,33 +121,38 @@ export function CafeCard(props: Coffee) {
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>{cafeData.shop_name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Image
-          src={cafeData.picture_url!}
-          alt={cafeData.shop_name}
-          className="w-full h-[200px] object-cover rounded-md mb-4"
-          width={350}
-          height={200}
-        />
-        <p className="text-sm text-gray-500 mb-2">{cafeData.created_at}</p>
-        <div className="flex items-center mb-2">
-          <CoffeeIcon className="mr-2 h-4 w-4" />
-          <span>Coffee Rating: {cafeData.coffee_rating}</span>
-        </div>
-        <div className="flex items-center mb-2">
-          <CakeIcon className="mr-2 h-4 w-4" />
-          <span>Dessert Rating: {cafeData.dessert_rating}</span>
-        </div>
-        <div className="flex items-center">
-          <MapPinIcon className="mr-2 h-4 w-4" />
-          <span>{cafeData.location}</span>
-        </div>
-      </CardContent>
-      <CardFooter>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline">Edit</Button>
+            <Button variant="ghost">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                fill="none"
+                viewBox="0 0 430 430"
+              >
+                <g
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="14"
+                  stroke-width="12"
+                >
+                  <path
+                    stroke="#e3c0ac"
+                    d="m344.35 142.219 35.355-35.356-56.568-56.568-35.356 35.355"
+                  />
+                  <path
+                    stroke="#121331"
+                    d="m153.431 333.137-84.81 28.328 28.241-84.897"
+                  />
+                  <path
+                    stroke="#121331"
+                    d="m153.431 333.138-56.569-56.569L287.781 85.65l56.569 56.569z"
+                  />
+                  <path stroke="#e3c0ac" d="m220.606 209.394 67.175-67.175" />
+                </g>
+              </svg>
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -272,7 +277,29 @@ export function CafeCard(props: Coffee) {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </CardFooter>
+      </CardHeader>
+      <CardContent>
+        <Image
+          src={cafeData.picture_url!}
+          alt={cafeData.shop_name}
+          className="w-full h-[200px] object-cover rounded-md mb-4"
+          width={350}
+          height={200}
+        />
+        <p className="text-sm text-gray-500 mb-2">{cafeData.created_at}</p>
+        <div className="flex items-center mb-2">
+          <CoffeeIcon className="mr-2 h-4 w-4" />
+          <span>Coffee Rating: {cafeData.coffee_rating}</span>
+        </div>
+        <div className="flex items-center mb-2">
+          <CakeIcon className="mr-2 h-4 w-4" />
+          <span>Dessert Rating: {cafeData.dessert_rating}</span>
+        </div>
+        <div className="flex items-center">
+          <MapPinIcon className="mr-2 h-4 w-4" />
+          <span>{cafeData.location}</span>
+        </div>
+      </CardContent>
     </Card>
   );
 }
