@@ -38,7 +38,7 @@ import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
-export function CafeCard(props: Coffee) {
+export function CoffeeCard(props: Coffee) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -115,6 +115,18 @@ export function CafeCard(props: Coffee) {
       });
       setIsDeleteDialogOpen(false);
     }
+  };
+
+  const fillStars = (rating: number) => {
+    const stars = [];
+    for (let i = 0; i < rating; i++) {
+      stars.push(
+        <span key={i} className="text-yellow-400">
+          ⭐
+        </span>
+      );
+    }
+    return stars;
   };
 
   return (
@@ -289,11 +301,17 @@ export function CafeCard(props: Coffee) {
         <p className="text-sm text-gray-500 mb-2">{cafeData.created_at}</p>
         <div className="flex items-center mb-2">
           <CoffeeIcon className="mr-2 h-4 w-4" />
-          <span>Coffee Rating: {cafeData.coffee_rating}</span>
+          <span>Coffee Rating: </span>
+          <div className="ml-2 flex gap-1">
+            {fillStars(cafeData.coffee_rating)}
+          </div>
         </div>
         <div className="flex items-center mb-2">
           <CakeIcon className="mr-2 h-4 w-4" />
-          <span>Dessert Rating: {cafeData.dessert_rating}</span>
+          <span>Dessert Rating: </span>
+          <div className="ml-2 flex gap-1">
+            {fillStars(cafeData.dessert_rating)}
+          </div>
         </div>
         <div className="flex items-center">
           <MapPinIcon className="mr-2 h-4 w-4" />
