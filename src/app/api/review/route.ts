@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 interface newCoffee {
   shop_name: string; // Name of the coffee shop
   coffee_rating: number; // Rating of the coffee, between 1 and 5
+  visited_date: string; // Date of the visit
   dessert_rating: number; // Rating of the dessert, between 1 and 5
   picture_url: string; // URL of the picture (optional)
   location: string; // Location of the coffee shop (optional)
@@ -14,15 +15,22 @@ interface newCoffee {
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
-  const { shop_name, coffee_rating, dessert_rating, picture_url, location } =
-    Object.fromEntries(formData);
+  const {
+    shop_name,
+    coffee_rating,
+    dessert_rating,
+    picture_url,
+    location,
+    visited_date,
+  } = Object.fromEntries(formData);
 
   if (
     !shop_name ||
     !coffee_rating ||
     !dessert_rating ||
     !picture_url ||
-    !location
+    !location ||
+    !visited_date
   ) {
     const missingFields = [];
     if (!shop_name) {
@@ -39,6 +47,9 @@ export async function POST(req: NextRequest) {
     }
     if (!location) {
       missingFields.push("location");
+    }
+    if (!visited_date) {
+      missingFields.push("visited_date");
     }
     return NextResponse.json(
       { message: `Missing fields: ${missingFields.join(", ")}` },
@@ -58,16 +69,18 @@ export async function POST(req: NextRequest) {
     dessert_rating: dessertRating,
     picture_url: pictureUrl,
     location: locationName,
+    visited_date: visited_date.toString(),
   };
 
   await tursoClient.execute({
-    sql: "INSERT INTO coffees (shop_name, coffee_rating, dessert_rating, picture_url, location) VALUES (?, ?, ?, ?, ?)",
+    sql: "INSERT INTO coffees (shop_name, coffee_rating, dessert_rating, picture_url, location, visited_date) VALUES (?, ?, ?, ?, ?, ?)",
     args: [
       newCoffee.shop_name,
       newCoffee.coffee_rating,
       newCoffee.dessert_rating,
       newCoffee.picture_url,
       newCoffee.location,
+      newCoffee.visited_date,
     ],
   });
 
@@ -113,8 +126,14 @@ export async function DELETE(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const formData = await req.formData();
-  const { id, shop_name, coffee_rating, dessert_rating, location } =
-    Object.fromEntries(formData);
+  const {
+    id,
+    shop_name,
+    coffee_rating,
+    dessert_rating,
+    location,
+    visited_date,
+  } = Object.fromEntries(formData);
 
   if (!id) {
     return NextResponse.json(
@@ -141,6 +160,11 @@ export async function PUT(req: NextRequest) {
   if (location) {
     fieldsToUpdate.push("location = ?");
     args.push(location.toString());
+  }
+
+  if (visited_date) {
+    fieldsToUpdate.push("visited_date = ?");
+    args.push(visited_date.toString());
   }
 
   if (fieldsToUpdate.length === 0) {

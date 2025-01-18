@@ -1,7 +1,7 @@
 import { UploadReview } from "@/components/upload-review";
 import { tursoClient } from "./lib/tursoClient";
 import { Coffee } from "./models/Coffee";
-import { CafeCard } from "@/components/cafe-card";
+import { CoffeeCard } from "@/components/cafe-card";
 
 async function getData(): Promise<Coffee[]> {
   try {
@@ -35,10 +35,10 @@ export default async function Home() {
         Coffee Spots ☕
       </h1>
       <UploadReview />
-      <ul className="grid grid-cols-1 mt-5 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+      <ul className="grid grid-cols-1 mt-5 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl justify-items-center">
         {coffees.map((coffee) => (
           <li key={coffee.id}>
-            <CafeCard {...coffee} />
+            <CoffeeCard {...coffee} />
           </li>
         ))}
       </ul>

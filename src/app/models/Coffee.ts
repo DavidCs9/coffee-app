@@ -7,4 +7,5 @@ export interface Coffee {
   location?: string; // Location of the coffee shop (optional)
   created_at: string; // Timestamp when the record was created
   updated_at: string; // Timestamp when the record was last updated
+  visited_date: string; // Date of the visit
 }

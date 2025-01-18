@@ -37,14 +37,20 @@ import { Coffee } from "@/app/models/Coffee";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import { Calendar } from "./ui/calendar";
 
-export function CafeCard(props: Coffee) {
+export function CoffeeCard(props: Coffee) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [cafeData, setCafeData] = useState(props);
   const { toast } = useToast();
+  const [date, setDate] = useState(new Date(cafeData.visited_date));
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCafeData({ ...cafeData, [e.target.name]: e.target.value });
@@ -60,6 +66,7 @@ export function CafeCard(props: Coffee) {
       formData.append("coffee_rating", cafeData.coffee_rating.toString());
       formData.append("dessert_rating", cafeData.dessert_rating.toString());
       formData.append("location", cafeData.location!);
+      formData.append("visited_date", date.toISOString());
 
       const res = await fetch(`/api/review?id=${cafeData.id}`, {
         method: "PUT",
@@ -117,11 +124,31 @@ export function CafeCard(props: Coffee) {
     }
   };
 
+  const fillStars = (rating: number) => {
+    const stars = [];
+    for (let i = 0; i < rating; i++) {
+      stars.push(
+        <span key={i} className="text-yellow-400">
+          ⭐
+        </span>
+      );
+    }
+    return stars;
+  };
+
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>{cafeData.shop_name}</CardTitle>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen} modal={false}>
           <DialogTrigger asChild>
             <Button variant="ghost">
               <svg
@@ -179,13 +206,28 @@ export function CafeCard(props: Coffee) {
                 <Label htmlFor="date" className="text-right">
                   Date
                 </Label>
-                <Input
-                  id="date"
-                  name="created_at"
-                  value={cafeData.created_at}
-                  onChange={handleInputChange}
-                  className="col-span-3"
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[221px] md:w-[277px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={(day) => day && setDate(day)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="coffeeRating" className="text-right">
@@ -286,14 +328,22 @@ export function CafeCard(props: Coffee) {
           width={350}
           height={200}
         />
-        <p className="text-sm text-gray-500 mb-2">{cafeData.created_at}</p>
+        <p className="text-sm text-gray-500 mb-2">
+          {formatDate(cafeData.visited_date)}
+        </p>
         <div className="flex items-center mb-2">
           <CoffeeIcon className="mr-2 h-4 w-4" />
-          <span>Coffee Rating: {cafeData.coffee_rating}</span>
+          <span>Coffee Rating: </span>
+          <div className="ml-2 flex gap-1">
+            {fillStars(cafeData.coffee_rating)}
+          </div>
         </div>
         <div className="flex items-center mb-2">
           <CakeIcon className="mr-2 h-4 w-4" />
-          <span>Dessert Rating: {cafeData.dessert_rating}</span>
+          <span>Dessert Rating: </span>
+          <div className="ml-2 flex gap-1">
+            {fillStars(cafeData.dessert_rating)}
+          </div>
         </div>
         <div className="flex items-center">
           <MapPinIcon className="mr-2 h-4 w-4" />
