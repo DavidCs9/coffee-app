@@ -159,10 +159,10 @@ export function CoffeeCard(props: Coffee) {
                 viewBox="0 0 430 430"
               >
                 <g
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-miterlimit="14"
-                  stroke-width="12"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeMiterlimit="14"
+                  strokeWidth="12"
                 >
                   <path
                     stroke="#e3c0ac"
@@ -321,12 +321,10 @@ export function CoffeeCard(props: Coffee) {
         </Dialog>
       </CardHeader>
       <CardContent>
-        <Image
+        <img
           src={cafeData.picture_url!}
           alt={cafeData.shop_name}
-          className="w-full h-[200px] object-cover rounded-md mb-4"
-          width={350}
-          height={200}
+          className="w-full h-auto object-cover rounded-md mb-4"
         />
         <p className="text-sm text-gray-500 mb-2">
           {formatDate(cafeData.visited_date)}
