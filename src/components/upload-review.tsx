@@ -85,6 +85,10 @@ export function UploadReview() {
     }
   };
 
+  const validateForm = () => {
+    return coffeeName && coffeeRating && dessertRating && location && date;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -250,7 +254,11 @@ export function UploadReview() {
               </Popover>
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || !validateForm()}
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
