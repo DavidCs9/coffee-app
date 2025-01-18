@@ -5,7 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { CoffeeIcon, CakeIcon, UploadIcon, Loader2 } from "lucide-react";
+import {
+  CoffeeIcon,
+  CakeIcon,
+  UploadIcon,
+  Loader2,
+  CalendarIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -15,8 +21,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 export function UploadReview() {
+  const [date, setDate] = useState<Date>();
   const [open, setOpen] = useState(false);
   const [coffeeName, setCoffeeName] = useState("");
   const [coffeeRating, setCoffeeRating] = useState(0);
@@ -87,6 +102,7 @@ export function UploadReview() {
       formData.append("dessert_rating", dessertRating.toString());
       formData.append("location", location);
       formData.append("picture_url", imageUrl);
+      formData.append("visited_date", date?.toISOString() || "");
 
       const response = await fetch("/api/review", {
         method: "POST",
@@ -124,7 +140,7 @@ export function UploadReview() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} modal={false}>
       <DialogTrigger asChild>
         <Button className="w-full md:max-w-sm bg-primary text-primary-foreground hover:bg-primary/90">
           <UploadIcon className="mr-2 h-4 w-4" /> Add New Review
@@ -204,6 +220,35 @@ export function UploadReview() {
               onChange={(e) => setLocation(e.target.value)}
               required
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="visitedDate">Visited Date</Label>
+            <div tabIndex={-1}>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <div tabIndex={-1}>
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                    />
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
