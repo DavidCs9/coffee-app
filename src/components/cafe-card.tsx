@@ -324,7 +324,7 @@ export function CoffeeCard(props: Coffee) {
         <img
           src={cafeData.picture_url!}
           alt={cafeData.shop_name}
-          className="w-full h-auto object-cover rounded-md mb-4"
+          className="w-full h-auto object-cover rounded-md mb-4 aspect-3/4"
         />
         <p className="text-sm text-gray-500 mb-2">
           {formatDate(cafeData.visited_date)}
