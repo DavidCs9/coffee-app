@@ -30,8 +30,8 @@ async function getData(): Promise<Coffee[]> {
 export default async function Home() {
   const coffees = await getData();
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 bg-amber-50 text-stone-800">
-      <h1 className="text-4xl font-serif font-bold mb-8 text-stone-900">
+    <main className="flex min-h-screen flex-col items-center p-4 bg-[#758976] text-stone-800">
+      <h1 className="text-4xl font-serif font-bold mb-8 text-[#EBE5D9]">
         Coffee Spots ☕
       </h1>
       <UploadReview />

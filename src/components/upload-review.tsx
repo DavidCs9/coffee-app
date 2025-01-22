@@ -146,7 +146,7 @@ export function UploadReview() {
   return (
     <Dialog open={open} onOpenChange={setOpen} modal={false}>
       <DialogTrigger asChild>
-        <Button className="w-full md:max-w-sm bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button className="w-full md:max-w-sm bg-[#9E83B8] text-primary-foreground hover:bg-primary/90">
           <UploadIcon className="mr-2 h-4 w-4" /> Add New Review
         </Button>
       </DialogTrigger>
